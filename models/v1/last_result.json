@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "model_sha256": "0391f0d213014b3cb64c0b7780341518d371e1954a6389bf7e9f3023465c6b96",
+  "result": {
+    "overlap_cm": 8.219536397930156,
+    "half_cm": 8.0,
+    "spread_cm": 0.03792724105107226,
+    "samples": 6,
+    "duration_seconds": 0.5070264999994833,
+    "captured_utc": "2026-11-12T09:44:25.109293+00:00"
+  }
+}

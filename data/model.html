@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SCRATCHSOR · PC overlap model</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f3;color:#192d24;font:15px/1.5 system-ui,sans-serif}main{max-width:1120px;margin:36px auto;padding:0 24px}header{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}h1{font-size:26px;margin:0}h2{font-size:17px;margin-top:0}p{color:#52645a}.pill{border:1px solid #ccd7cd;border-radius:6px;background:white;padding:7px 12px}.grid{display:grid;grid-template-columns:1fr 1.6fr;gap:16px;margin:24px 0}.card{background:#fff;border:1px solid #ccd7cd;border-radius:8px;padding:24px}.value{font:64px ui-monospace,Consolas,monospace;letter-spacing:-3px;color:#176b48}.value small{font:22px system-ui;letter-spacing:0}.muted{color:#52645a}.warn{color:#965d11}.bad{color:#a13b32}.ok{color:#176b48}canvas{width:100%;height:240px}label{display:block;margin-top:22px}input{border:1px solid #a9b8ae;padding:10px;border-radius:5px;width:150px;font:inherit;margin-top:6px}a{color:#176b48}.note{font-size:13px}.stats{display:flex;gap:25px;flex-wrap:wrap}.stats strong{font:21px ui-monospace,Consolas,monospace}.stats span{display:block;font-size:13px;color:#52645a}@media(max-width:760px){main{padding:0 16px}.grid{grid-template-columns:1fr}.value{font-size:54px}}
+button{font:inherit;padding:10px 14px;border:1px solid #a9b8ae;border-radius:5px;background:#eef5ef;color:#176b48;cursor:pointer}button:disabled{opacity:.6;cursor:wait}button:focus-visible{outline:2px solid #176b48;outline-offset:3px}
+#measure{display:block;width:100%;margin-top:18px;padding:14px;background:#176b48;color:white;border-color:#176b48;font-weight:600;font-size:18px}
+</style></head><body><main>
+<header><div><h1 id="model-name">Fingertip overlap</h1><p>ESP32 streams · your PC filters and predicts</p></div><span id="status" class="pill">Connecting…</span></header>
+<div class="grid"><section class="card"><h2 id="estimate-title">Middle-to-middle overlap</h2><div class="value"><span id="estimate">—</span> <small>cm</small></div>
+<p id="rounded">Nearest 0.5 cm: —</p><p id="detail" class="note">Waiting for fresh readings from all four sensors.</p>
+<button id="measure" type="button" disabled>Measure · 1 second</button><p id="hold-status" class="note" role="status">Press Measure when ready, then hold still for one second. The result stays visible until your next measurement.</p><p id="measure-error" class="note bad" role="alert"></p><p id="held-detail" class="note"></p>
+<label for="reference">Actual overlap (cm), optional</label><input id="reference" type="number" min="0" step="0.5" placeholder="Measured cm"><p id="error" class="note">Enter a ruler measurement to compare. This value is never fed into the model.</p>
+<hr><h2>No-magnet reference</h2><p class="note">Remove all magnets and keep the sensor mounting still before capturing. No magnet is different from 0 cm overlap.</p><button id="background-capture" type="button">Capture no-magnet reference · 5 seconds</button><p id="background-note" class="note" role="status"></p><p id="background-error" class="note bad" role="alert"></p>
+</section><section class="card"><h2>Measured overlap · last 30 seconds</h2><canvas id="chart" aria-label="Held fingertip overlap measurements in centimetres"></canvas><p class="note">Press Measure when ready. Hold still for one second, then your result stays on screen until the next completed measurement. The status shows current magnet and connection availability.</p></section></div>
+<section class="card"><h2>What this model has demonstrated</h2><div class="stats"><div><span id="mae-label">Held-out average error</span><strong id="mae">—</strong></div><div><span id="within-label">Predictions within ±0.5 cm</span><strong id="within">—</strong></div><div><span id="p95-label">95th percentile error</span><strong id="p95">—</strong></div></div><p class="note" id="validation-description"></p>
+<p class="warn">Experimental and specific to your sensor mounting. Displaying half-centimetre steps does not establish half-centimetre accuracy. Trained range: <span id="trained-range">—</span>.</p>
+<p class="note">Smoothing and held measurements improve steadiness, not model accuracy. Prediction spread indicates variation during the hold; it is not an accuracy or confidence interval.</p>
+<p class="note">These error scores apply to overlap trials. No-magnet detection uses a separate background reference. Capture it again if the sensor mounting or magnetic surroundings change.</p>
+<p class="note" id="next-measurements"></p>
+<a href="http://127.0.0.1:8766/#/measure" target="_blank" rel="noopener">Collect more training data →</a></section>
+<p class="note">Model runs locally on this PC. No firmware update or on-board model is installed. Raw training files and saved recordings are retained.</p>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);let points=[],lastSeq=null,lastPrediction=null,lastMeasurement=null,lastCompletedResult=null,referenceVersion=null,modelVersion=null,chartMax=10,capturing=false,measureRequest=false;
+function draw(){const cv=$('chart'),r=cv.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);cv.width=r.width*dpr;cv.height=r.height*dpr;const c=cv.getContext('2d');c.scale(dpr,dpr);const w=r.width,h=r.height,L=35,B=26,T=10,R=10;c.font='12px system-ui';c.strokeStyle='#e0e8df';c.fillStyle='#52645a';for(let y=0;y<=chartMax;y+=2){const p=h-B-(h-B-T)*y/chartMax;c.beginPath();c.moveTo(L,p);c.lineTo(w-R,p);c.stroke();c.fillText(y+'',8,p+4);}c.fillText('cm',6,12);c.fillText('−30s',L,h-4);c.fillText('now',w-35,h-4);const now=Date.now();points=points.filter(p=>now-p.at<=30000);c.strokeStyle='#176b48';c.lineWidth=2;c.beginPath();let drawing=false;for(const p of points){if(p.value===null){drawing=false;continue;}const x=L+(w-L-R)*(1-(now-p.at)/30000),y=h-B-(h-B-T)*p.value/chartMax;if(drawing)c.lineTo(x,y);else c.moveTo(x,y);drawing=true;}c.stroke();}
+function reference(){const value=$('reference').value,result=lastMeasurement?.result||lastCompletedResult;if(value!==''&&result)$('error').textContent='Last result − actual: '+(result.overlap_cm-Number(value)).toFixed(2)+' cm';else $('error').textContent='Enter a ruler measurement to compare. This value is never fed into the model.';}
+$('reference').addEventListener('input',reference);
+$('measure').onclick=async()=>{
+  if(measureRequest||lastMeasurement?.state==='MEASURING')return;
+  measureRequest=true;$('measure').disabled=true;$('measure-error').textContent='';
+  try{const r=await fetch('/measure',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const d=await r.json();if(!r.ok)throw Error(d.error||'Could not start measurement');lastMeasurement=d.measurement;$('hold-status').textContent='Hold still · measuring for one second…';}
+  catch(e){$('measure-error').textContent=e.message;}
+  finally{measureRequest=false;}
+};
+$('background-capture').onclick=async()=>{
+  if(capturing)return;capturing=true;$('background-capture').disabled=true;$('background-error').textContent='';
+  try{const r=await fetch('/background',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const d=await r.json();if(!r.ok)throw Error(d.error||'Background capture failed');points=[];lastSeq=null;}
+  catch(e){$('background-error').textContent=e.message;}
+  finally{capturing=false;$('background-capture').disabled=false;}
+};
+async function poll(){
+  try{
+    const r=await fetch('/prediction',{cache:'no-store'});if(!r.ok)throw Error('Model server unavailable');
+    const d=await r.json(),p=d.prediction;
+    if(d.model.sha256!==modelVersion){lastCompletedResult=null;points=[];lastSeq=null;modelVersion=d.model.sha256;}
+    $('model-name').textContent=d.model.name;document.title='SCRATCHSOR · '+d.model.name;
+    const range=d.model.range_cm;$('trained-range').textContent=range.join('–')+' cm';$('reference').min=range[0];$('reference').max=range[1];chartMax=Math.max(2,Math.ceil(range[1]/2)*2);
+    $('next-measurements').textContent=d.model.unmeasured_half_cm.length?'Next measurements needed: '+d.model.unmeasured_half_cm.map(v=>v.toFixed(1)).join(', ')+' cm. Use independent repositioned trials and keep whole trials together for validation.':'Collect independent validation trials across the trained range.';
+    lastPrediction=p;lastMeasurement=d.measurement;const live=p.state==='LIVE';
+    const measurement=d.measurement;if(measurement?.result)lastCompletedResult=measurement.result;
+    const result=lastCompletedResult,measuring=measurement?.state==='MEASURING';
+    const displayed=result?.overlap_cm,rounded=result?.half_cm;
+    $('status').textContent=measuring?'MEASURING · '+measurement.remaining_seconds.toFixed(1)+' s':live?(result?'RESULT HELD':'READY TO MEASURE'):p.state.replaceAll('_',' ');$('status').className='pill '+(live&&!measuring?'ok':'warn');
+    $('estimate-title').textContent=result?'Last measured overlap':'Middle-to-middle overlap';
+    $('estimate').textContent=result?displayed.toFixed(2):'—';$('rounded').textContent='Nearest 0.5 cm: '+(result?rounded.toFixed(1)+' cm':'—');
+    const descriptions={NO_MAGNET:'No magnet detected. Put the magnets back in the measurement setup to resume. Zero overlap still requires magnets.',BACKGROUND_REQUIRED:'Remove all magnets, then capture the no-magnet reference below.',CAPTURING_BACKGROUND:'Keep magnets away and sensors still · '+(p.remaining_seconds||0).toFixed(1)+' seconds remaining.',UNFAMILIAR_POSE:'This field pattern is unlike the training data. Check mounting and magnet orientation.'};
+    const liveDetail=d.source_error?'Start the USB dashboard on port 8766 and connect the board. '+d.source_error:live?(measuring?'Keep the overlap still while measuring.':result?'Result is held. Press Measure when ready for the next reading.':'Ready. Press Measure, then hold still for one second.'):descriptions[p.state]||(p.state==='OUT_OF_RANGE'?'Current sensor reading is outside the trained range.':'Waiting for fresh readings from all four sensors. Keep the mounting used for training.');
+    $('detail').textContent=(result&&(measuring||!live)?'Showing the last completed result. ':'')+liveDetail;
+    const busy=capturing||p.state==='CAPTURING_BACKGROUND';
+    $('measure').disabled=measureRequest||busy||measuring||!d.can_measure;$('measure').textContent=measuring?'Measuring… '+measurement.remaining_seconds.toFixed(1)+' s':'Measure · 1 second';
+    $('hold-status').textContent=measuring?'Hold still · '+measurement.remaining_seconds.toFixed(1)+' seconds remaining.':measurement?.state==='ERROR'?measurement.detail:live?(result?'Result stays visible until you press Measure again.':'Press Measure when ready.'):result?'Last result retained. Valid magnet readings are needed for the next measurement.':'Connect the sensors and position the magnets before measuring.';
+    $('held-detail').textContent=result?'Last result spread: '+result.spread_cm.toFixed(2)+' cm'+(result.captured_utc?' · '+new Date(result.captured_utc).toLocaleTimeString('en-GB',{timeZone:'Asia/Bangkok'}):'')+(result.motion_warning?' · Signal moved; hold still and measure again.':'')+(d.result_error?' · '+d.result_error:''):'';
+    $('background-capture').disabled=busy||measuring||measureRequest;$('background-capture').textContent=busy?'Capturing… keep magnets away':'Capture no-magnet reference · 5 seconds';
+    $('background-note').textContent=d.background?'Reference saved · '+new Date(d.background.created_utc).toLocaleString('en-GB',{timeZone:'Asia/Bangkok'}):'A no-magnet reference is required before showing overlap estimates.';
+    if(d.background?.created_utc!==referenceVersion){points=[];referenceVersion=d.background?.created_utc;}
+    const m=d.model.holdout,v=d.model.measurement_validation;
+    $('mae-label').textContent=v?'Completed-result average error':'Held-out average error';$('within-label').textContent=v?'One-second attempts within ±0.5 cm':'Predictions within ±0.5 cm';$('p95-label').textContent=v?'Completed-result 95th percentile error':'95th percentile error';
+    $('mae').textContent=(v?v.mae_cm_completed:m.window_mae_cm).toFixed(2)+' cm';$('within').textContent=((v?v.success_fraction_all_attempts:m.within_0_5_cm)*100).toFixed(1)+'%';$('p95').textContent=(v?v.p95_error_cm_completed:m.window_p95_error_cm).toFixed(2)+' cm';
+    $('validation-description').textContent=d.model.validation_description||'';
+    if(p.seq!==lastSeq||!live){points.push({at:Date.now(),value:result?displayed:null});lastSeq=p.seq;}reference();draw();
+  }catch(e){$('measure').disabled=true;$('background-capture').disabled=true;$('status').textContent='Model disconnected';$('estimate-title').textContent=lastCompletedResult?'Last measured overlap':'Middle-to-middle overlap';$('estimate').textContent=lastCompletedResult?lastCompletedResult.overlap_cm.toFixed(2):'—';$('rounded').textContent='Nearest 0.5 cm: '+(lastCompletedResult?lastCompletedResult.half_cm.toFixed(1)+' cm':'—');$('detail').textContent=lastCompletedResult?'Last result retained while reconnecting.':'Waiting for the model connection.';lastPrediction=null;reference();}
+  finally{setTimeout(poll,100);}
+}
+window.addEventListener('resize',draw);poll();
+</script></body></html>

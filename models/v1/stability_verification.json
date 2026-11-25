@@ -1,0 +1,27 @@
+{
+  "prediction_window_ms": 800,
+  "valid_replayed_predictions": 2454,
+  "mean_step_change_before_cm": 0.055589820522179145,
+  "mean_step_change_after_cm": 0.02059443935088814,
+  "accuracy_revalidation": false,
+  "automatic_hold_seconds": 3,
+  "steady_signal_locks_automatically": true,
+  "held_value_remains_fixed_under_small_jitter": true,
+  "movement_releases_and_relocks": true,
+  "no_magnet_clears_held_result": true,
+  "changing_signal_does_not_lock": true,
+  "first_example": {
+    "overlap_cm": 4.0,
+    "half_cm": 4.0,
+    "spread_cm": 0.149749562031261,
+    "samples": 31,
+    "duration_seconds": 3.0
+  },
+  "second_example": {
+    "overlap_cm": 5.0,
+    "half_cm": 5.0,
+    "spread_cm": 0.11197020910409528,
+    "samples": 32,
+    "duration_seconds": 3.099999999999989
+  }
+}

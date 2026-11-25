@@ -1,0 +1,111 @@
+{
+  "input_files_unchanged": true,
+  "fit_trials": 137,
+  "training_windows": 3820,
+  "negative_numeric_values_invented": false,
+  "firmware_installed": true,
+  "installed_utc": "2026-11-12T18:49:59.220705+00:00",
+  "serial_port": "COM7",
+  "device": {
+    "name": "SCRATCHSOR-9BD8",
+    "product": "SCRATCHSOR",
+    "fw": "0.3.0-range-v5",
+    "overlapModel": "v5-2239e5f0b09f",
+    "api": "v1",
+    "uptimeMs": 44838,
+    "heap": 179892
+  },
+  "health": {
+    "mux": false,
+    "muxAddr": 0,
+    "oled": true,
+    "oledAddr": 60,
+    "controller": "SSD1306",
+    "oledScreen": 2,
+    "oledLastDisplayedMs": 44234,
+    "oledRefreshPending": true,
+    "rate": 47.5157,
+    "phoneMeasuring": false,
+    "phoneCapturePending": false,
+    "uptimeMs": 44892,
+    "heap": 181128,
+    "sensors": [
+      {
+        "id": 0,
+        "st": "OK",
+        "ok": 2123,
+        "err": 0
+      },
+      {
+        "id": 1,
+        "st": "OK",
+        "ok": 2122,
+        "err": 0
+      },
+      {
+        "id": 2,
+        "st": "OK",
+        "ok": 2122,
+        "err": 0
+      },
+      {
+        "id": 3,
+        "st": "OK",
+        "ok": 2122,
+        "err": 0
+      }
+    ]
+  },
+  "automatic_usb_reset": true,
+  "flashed_images_hash_verified": 5,
+  "build_manifest": {
+    "firmware": "0.3.0-range-v5",
+    "nvs_preserved": true,
+    "files": {
+      "bootloader.bin": {
+        "address": "0x1000",
+        "bytes": 17536,
+        "sha256": "3d234a7471f67b013686dabd4dee7c1fa915c9928463616a94bc9297acf1abf8"
+      },
+      "partitions.bin": {
+        "address": "0x8000",
+        "bytes": 3072,
+        "sha256": "a3dfc79b385a9cc9d09ab673325b804a3f77d8830a4412f7da079083fa8177ce"
+      },
+      "boot_app0.bin": {
+        "address": "0xe000",
+        "bytes": 8192,
+        "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0"
+      },
+      "firmware.bin": {
+        "address": "0x10000",
+        "bytes": 1063216,
+        "sha256": "e167b05a5c204dca87dde7e641b1c9c5946ea74a6d9907f2bfbd9f320c851583"
+      },
+      "littlefs.bin": {
+        "address": "0x290000",
+        "bytes": 1441792,
+        "sha256": "adb56433b28e6e2a7c189717cbf9a69a9b1771ea63f573cf874078ece5c1a878"
+      }
+    }
+  },
+  "numeric_model_unchanged": true,
+  "recordings_database_unchanged": true,
+  "recordings_logical_sha256": "19136e55139d767b5760e6eb00a28f6c6e8cf6afb7086191822a0f00b6c01016",
+  "backup": ".pio\\product-backup-0.2.3-before-v5\\sessions-before-flash.sqlite3",
+  "native_verification": {
+    "real_feature_vectors": 4094,
+    "capture_consensus_checks": 274,
+    "maximum_probability_difference": 6.058223600557966e-07,
+    "class_and_acceptance_agreement": true,
+    "input_files_unchanged": true
+  },
+  "isolated_phone_checks": [
+    "tail display/CSV/null numeric values",
+    "offline delete/restore",
+    "patient/trial rename and all-patient selection",
+    "CSV/ZIP raw preservation",
+    "one-tap connect and bounded 15 FPS live graph"
+  ],
+  "real_pose_measurements_verified": false
+}

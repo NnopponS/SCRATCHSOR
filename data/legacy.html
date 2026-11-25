@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f6f3">
+<meta name="description" content="SCRATCHSOR magnetic-sensing dashboard">
+<title>SCRATCHSOR</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=448c6ad473">
+</head>
+<body data-ws="connecting">
+<div class="head-stick">
+  <header class="topbar">
+    <a class="brand" href="#/measure" aria-label="SCRATCHSOR training data">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="#a9b8a5" stroke-width="3"/>
+        <path d="M44 18c-8-4-18-2-21 4-2 5 2 8 9 10s13 4 11 10c-3 6-14 8-23 3"
+              fill="none" stroke="#176b48" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">SCRATCHSOR</span>
+    </a>
+    <div class="conn conn-mute" id="conn-pill" role="status" aria-live="polite">
+      <span class="conn-dot" aria-hidden="true"></span><span id="conn-text">connectingâ€¦</span>
+    </div>
+  </header>
+  <nav class="main-nav" id="main-nav" aria-label="Primary">
+    <a href="#/overview"    data-route="overview">Overview</a>
+    <a href="#/sensors"     data-route="sensors">Live Sensors</a>
+    <a href="#/measure"     data-route="measure">Training data</a>
+    <a href="#/wifi"        data-route="wifi">Wi-Fi</a>
+    <a href="#/settings"    data-route="settings">Settings</a>
+  </nav>
+</div>
+
+<main id="view" class="view" tabindex="-1"></main>
+
+<footer class="foot">
+  <span id="foot-device">SCRATCHSOR</span>
+  <span class="foot-sep" aria-hidden="true">&middot;</span>
+  <span>Raw magnetic data collection · train your model on your computer</span>
+</footer>
+
+<div class="toasts" id="toasts"></div>
+<div id="modal-root"></div>
+
+<script src="js/charts.js?v=ce719452ac"></script>
+<script src="js/app.js?v=trial-chip-open-20261112"></script>
+</body>
+</html>

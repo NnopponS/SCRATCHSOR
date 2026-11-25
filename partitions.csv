@@ -1,0 +1,8 @@
+# Existing NVS, app0 and LittleFS offsets are preserved. No OTA updater is implemented.
+# Name, Type, SubType, Offset, Size, Flags
+nvs, data, nvs, 0x9000, 0x5000,
+otadata, data, ota, 0xe000, 0x2000,
+app0, app, ota_0, 0x10000, 0x140000,
+reach_nvs, data, nvs, 0x150000, 0x10000,
+spiffs, data, spiffs, 0x290000, 0x160000,
+coredump, data, coredump, 0x3f0000, 0x10000,

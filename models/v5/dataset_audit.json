@@ -1,0 +1,172 @@
+{
+  "dataset2": [
+    {
+      "file": "distance_0.0cm.csv",
+      "recorded_distance_cm": [
+        0.0
+      ],
+      "distance_cm": [
+        0.0
+      ],
+      "trials": 10,
+      "rows": 5676,
+      "healthy_complete_frames": 1419,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_1.0cm.csv",
+      "recorded_distance_cm": [
+        1.0
+      ],
+      "distance_cm": [
+        1.0
+      ],
+      "trials": 10,
+      "rows": 5664,
+      "healthy_complete_frames": 1416,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_2.0cm.csv",
+      "recorded_distance_cm": [
+        2.0
+      ],
+      "distance_cm": [
+        2.0
+      ],
+      "trials": 10,
+      "rows": 5672,
+      "healthy_complete_frames": 1418,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_3.0cm.csv",
+      "recorded_distance_cm": [
+        3.0
+      ],
+      "distance_cm": [
+        3.0
+      ],
+      "trials": 13,
+      "rows": 7388,
+      "healthy_complete_frames": 1847,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_4.0cm.csv",
+      "recorded_distance_cm": [
+        4.0
+      ],
+      "distance_cm": [
+        4.0
+      ],
+      "trials": 14,
+      "rows": 7940,
+      "healthy_complete_frames": 1985,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_5.0cm.csv",
+      "recorded_distance_cm": [
+        5.0
+      ],
+      "distance_cm": [
+        5.0
+      ],
+      "trials": 10,
+      "rows": 5688,
+      "healthy_complete_frames": 1422,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_6.0cm.csv",
+      "recorded_distance_cm": [
+        6.0
+      ],
+      "distance_cm": [
+        6.0
+      ],
+      "trials": 10,
+      "rows": 5676,
+      "healthy_complete_frames": 1419,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_7.0cm.csv",
+      "recorded_distance_cm": [
+        7.0
+      ],
+      "distance_cm": [
+        7.0
+      ],
+      "trials": 10,
+      "rows": 5656,
+      "healthy_complete_frames": 1414,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_8.0cm.csv",
+      "recorded_distance_cm": [
+        8.0
+      ],
+      "distance_cm": [
+        8.0
+      ],
+      "trials": 10,
+      "rows": 5680,
+      "healthy_complete_frames": 1420,
+      "unhealthy_rows": 0
+    }
+  ],
+  "dataset3": [
+    {
+      "file": "distance_below_0.0cm.csv",
+      "recorded_distance_cm": [
+        0.0
+      ],
+      "distance_cm": [
+        0.0
+      ],
+      "trials": 20,
+      "rows": 10828,
+      "healthy_complete_frames": 2707,
+      "unhealthy_rows": 0
+    },
+    {
+      "file": "distance_higher_8.0cm.csv",
+      "recorded_distance_cm": [
+        9.0
+      ],
+      "distance_cm": [
+        9.0
+      ],
+      "trials": 20,
+      "rows": 10868,
+      "healthy_complete_frames": 2717,
+      "unhealthy_rows": 0
+    }
+  ],
+  "region_trials": {
+    "VALUE": 97,
+    "BELOW_ZERO": 20,
+    "ABOVE_EIGHT": 20
+  },
+  "label_interpretation": {
+    "distance_below_0.0cm.csv": "BELOW_ZERO; recorded numeric 0 is a placeholder, not an exact target",
+    "distance_higher_8.0cm.csv": "ABOVE_EIGHT; recorded numeric 9 is treated as a range label, not proof of exact 9 cm"
+  },
+  "presence_windows": {
+    "BELOW_ZERO": {
+      "present": 507,
+      "total": 558
+    },
+    "VALUE": {
+      "present": 2704,
+      "total": 2704
+    },
+    "ABOVE_EIGHT": {
+      "present": 558,
+      "total": 558
+    }
+  }
+}

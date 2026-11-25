@@ -1,0 +1,9 @@
+{
+  "input_files_unchanged": true,
+  "holdout_export_comparisons": 270,
+  "cpp_max_absolute_difference_cm": 1.3623985761768154e-06,
+  "live_replay_predictions": 28,
+  "stale_and_missing_sensor_output_cleared": true,
+  "repeated_frames_do_not_mask_staleness": true,
+  "same_sequence_sensor_errors_clear_output": true
+}

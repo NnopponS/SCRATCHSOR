@@ -1,0 +1,32 @@
+{
+  "created_utc": "2026-11-12T09:44:34.429840+00:00",
+  "input_files_unchanged": true,
+  "input_sha256": {
+    "distance_0.0cm.csv": "6323ea35d6b3df8792e8347f4cf3427db031654c1d96c6b64bec5090f9bb7725",
+    "distance_2.0cm.csv": "efc0a5402e6756ec7e4aa3ea9983bb2fc2f94bfd5a17abf809ec1d215fff39dd",
+    "distance_3.0cm.csv": "5a337ba591efb9cc28b181e1286cd8c15e065b1a2e5bfccd987f479ac8184be5",
+    "distance_4.0cm.csv": "bd6b8de0c3cd9327e3998f52d893b00dbe8c95e1e2642169c931aeb4f5b53393",
+    "distance_5.0cm.csv": "65c4f1d6db62af63d0c4d9af69a5131c684d828cf4293cbcaefb8266b2a3c362",
+    "distance_6.0cm.csv": "42db2ece17e6a0d09a3adbb12a987cda0e16b5b132f3536626845db4a393079e",
+    "distance_7.0cm.csv": "352b53da08875742c65db438bcf7a4c41410de76a8c8208bd491265a4bda33fc",
+    "distance_8.0cm.csv": "c40e6549ab09ad9753d6f4245122848ffd5cfbe644c300e503aafaf6f2af86ba",
+    "distance_9.0cm.csv": "2d9e99fd1a3f6306cfb180a5d1d5316c0f2bcebdcdd4e7ef46e64965d339c14a"
+  },
+  "corrected_distances_cm": [
+    0.0,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0
+  ],
+  "holdout_reuses_v1_trial_partition": true,
+  "holdout_is_new_external_session": false,
+  "background_reference_reused_from_v1": true,
+  "background_reference_matches_new_model": true,
+  "old_model_and_recordings_retained": true,
+  "firmware_changed": false
+}

@@ -1,0 +1,15 @@
+{
+  "input_files_unchanged": true,
+  "portable_max_difference_cm": 2.220446049250313e-15,
+  "production_trials": 97,
+  "no_trials_dropped": true,
+  "firmware_installed": false,
+  "model_sha256": "a085a31936f033def47a4eaa0e4186f1befbd150f88e6cc1d5ddf6b4c7e44933",
+  "background_reference_loaded": true,
+  "minimum_dataset_presence_signal_uT": 603.6486083608575,
+  "presence_on_threshold_uT": 77.03392055451928,
+  "dataset_windows_below_presence_on_threshold": 0,
+  "measurement_replay_attempts": 36,
+  "measurement_replay_successes": 32,
+  "active_model_refit_independently_evaluated": false
+}

@@ -1,0 +1,8 @@
+{
+  "outcomes": {
+    "range_rejected": 11,
+    "classified": 263
+  },
+  "numeric_mae_training_data_only": 0.0876063829787234,
+  "warning": "Classifier is evaluated with whole-trial holdout, but numeric v4 was already trained on the entire in-range dataset. This is NOT independent numeric validation."
+}

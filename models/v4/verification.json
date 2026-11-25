@@ -1,0 +1,16 @@
+{
+  "input_files_unchanged": true,
+  "model_sha256": "2c0a6690e521bfa11928bff96d4a893245226aafc276b93459e823468652b123",
+  "no_trials_dropped": true,
+  "firmware_installed": false,
+  "measurement_duration_seconds": 1,
+  "nested_outer_attempts": 194,
+  "portable_max_difference_cm": 1.7763568394002505e-15,
+  "real_window_comparisons": 2704,
+  "pc_inference_ms": 0.17550520000077086,
+  "no_magnet_replay_states": {
+    "NO_MAGNET": 47
+  },
+  "one_second_button_unchanged": true,
+  "raw_inputs_unchanged": true
+}

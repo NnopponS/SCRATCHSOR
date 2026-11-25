@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCRATCHSOR · Live USB</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f3;color:#192d24;font:15px/1.5 system-ui,sans-serif}
+main{max-width:1100px;margin:48px auto;padding:0 24px}header{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+h1{font-size:28px;margin:0}p{color:#52645a}.status{border:1px solid #b7c8bd;border-radius:6px;background:white;padding:7px 12px}
+.stats{display:flex;gap:32px;flex-wrap:wrap;padding:22px 0}.stats span{display:block;color:#52645a;font-size:13px}.stats strong{font:20px ui-monospace,Consolas,monospace}
+.panel{background:white;border:1px solid #ccd7cd;border-radius:8px;overflow:auto}table{border-collapse:collapse;width:100%;min-width:600px}
+th,td{padding:18px;text-align:right;white-space:nowrap;border-bottom:1px solid #e3e9e2}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{font-weight:500;font-size:13px;color:#52645a}td{font:16px ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}
+.ok{color:#176b48}.bad{color:#a13b32}.note{font-size:13px;margin-top:20px}@media(max-width:640px){main{margin-top:24px;padding:0 16px}th,td{padding:13px}.stats{gap:20px}h1{font-size:24px}}
+</style>
+</head>
+<body><main>
+<header><div><h1>Live magnetic readings</h1><p id="port">Connecting to USB…</p></div><div id="connection" class="status" role="status" aria-live="polite">Waiting for data</div></header>
+<div class="stats">
+<div><span>Device acquisition</span><strong id="acquisition">—</strong></div>
+<div><span>Received on this PC</span><strong id="received">—</strong></div>
+<div><span>Frame sequence</span><strong id="sequence">—</strong></div>
+<div><span>Healthy sensors</span><strong id="healthy">—</strong></div>
+</div>
+<div class="panel"><table aria-label="Live raw sensor readings in microtesla">
+<thead><tr><th>Sensor</th><th>Status</th><th>Bx (µT)</th><th>By (µT)</th><th>Bz (µT)</th><th>|B| (µT)</th></tr></thead>
+<tbody id="readings"></tbody></table></div>
+<p class="note">Raw readings update continuously. Signed axes show direction; |B| is field strength. Unavailable readings show a dash.</p>
+<p class="note">Receive-only mode · No recording, calibration, or device settings changes. Existing recordings remain untouched.</p>
+</main>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const rows=[];
+for(let id=0;id<4;id++){
+  const row=document.createElement('tr');
+  for(const value of ['S'+(id+1)+' · CH'+(id+2),'Waiting','—','—','—','—']){
+    const cell=document.createElement('td');cell.textContent=value;row.appendChild(cell);
+  }
+  el('readings').appendChild(row);rows.push(row);
+}
+let lastAt=0,lastSeq=null,connected=false,arrivals=[];
+function unavailable(label){
+  el('connection').textContent=label;el('connection').className='status bad';
+  el('acquisition').textContent=el('received').textContent=el('healthy').textContent='—';
+  for(const row of rows){row.children[1].textContent=label;row.children[1].className='bad';for(let i=2;i<6;i++)row.children[i].textContent='—';}
+}
+fetch('/usb/info').then(r=>r.json()).then(d=>{el('port').textContent=d.port+' · USB serial · '+d.baud+' baud';}).catch(()=>{});
+const stream=new EventSource('/usb/events');
+stream.onmessage=event=>{
+  let frame;try{frame=JSON.parse(event.data);}catch{return;}
+  if(frame.t==='usb'){
+    connected=frame.connected===true;
+    if(!connected){lastAt=0;lastSeq=null;arrivals=[];unavailable('USB disconnected');}
+    return;
+  }
+  if(frame.t!=='sensors' || !Array.isArray(frame.s) || frame.seq===lastSeq)return;
+  connected=true;lastSeq=frame.seq;lastAt=performance.now();arrivals.push(lastAt);arrivals=arrivals.filter(t=>lastAt-t<=5000);
+  el('connection').textContent='USB · receiving';el('connection').className='status ok';
+  el('sequence').textContent='#'+frame.seq;
+  el('acquisition').textContent=Number.isFinite(frame.rate)?frame.rate.toFixed(1)+' Hz':'—';
+  el('received').textContent=arrivals.length>1?((arrivals.length-1)*1000/(lastAt-arrivals[0])).toFixed(1)+' Hz':'—';
+  let healthy=0;
+  for(let id=0;id<4;id++){
+    const sample=frame.s.find(s=>s.id===id),ok=sample?.st==='OK'&&!sample.sat,row=rows[id];
+    healthy+=ok?1:0;
+    row.children[1].textContent=sample?.sat?'SATURATED':sample?.st||'NOT_FOUND';row.children[1].className=ok?'ok':'bad';
+    ['rx','ry','rz','rm'].forEach((key,i)=>{row.children[i+2].textContent=ok&&Number.isFinite(sample[key])?sample[key].toFixed(2):'—';});
+  }
+  el('healthy').textContent=healthy+'/4';
+};
+stream.onerror=()=>{connected=false;lastAt=0;lastSeq=null;arrivals=[];unavailable('Reconnecting USB…');};
+setInterval(()=>{if(connected&&(!lastAt||performance.now()-lastAt>1500))unavailable('Waiting for fresh data');},500);
+</script></body></html>

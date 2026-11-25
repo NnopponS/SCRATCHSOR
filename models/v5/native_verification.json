@@ -1,0 +1,7 @@
+{
+  "real_feature_vectors": 4094,
+  "capture_consensus_checks": 274,
+  "maximum_probability_difference": 6.058223600557966e-07,
+  "class_and_acceptance_agreement": true,
+  "input_files_unchanged": true
+}

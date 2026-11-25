@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "reason": "User corrected the recorded overlap labels on 2026-11-12: recorded 2 cm means 1 cm, through recorded 9 cm means 8 cm. The separate recorded 0 cm remains 0 cm.",
+  "files": {
+    "distance_0.0cm.csv": {"recorded_cm": 0, "corrected_cm": 0},
+    "distance_2.0cm.csv": {"recorded_cm": 2, "corrected_cm": 1},
+    "distance_3.0cm.csv": {"recorded_cm": 3, "corrected_cm": 2},
+    "distance_4.0cm.csv": {"recorded_cm": 4, "corrected_cm": 3},
+    "distance_5.0cm.csv": {"recorded_cm": 5, "corrected_cm": 4},
+    "distance_6.0cm.csv": {"recorded_cm": 6, "corrected_cm": 5},
+    "distance_7.0cm.csv": {"recorded_cm": 7, "corrected_cm": 6},
+    "distance_8.0cm.csv": {"recorded_cm": 8, "corrected_cm": 7},
+    "distance_9.0cm.csv": {"recorded_cm": 9, "corrected_cm": 8}
+  }
+}

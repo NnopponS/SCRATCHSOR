@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "created_utc": "2026-11-12T08:53:10.696839+00:00",
+  "model_sha256": "a085a31936f033def47a4eaa0e4186f1befbd150f88e6cc1d5ddf6b4c7e44933",
+  "label": "no_magnet",
+  "frames": 235,
+  "background_axes_uT": [
+    297.15,
+    17.4,
+    155.364,
+    -125.4,
+    -228.9,
+    414.062,
+    53.7,
+    51.45,
+    174.24,
+    14.7,
+    -339.9,
+    488.84
+  ],
+  "off_threshold_uT": 51.355947036346194,
+  "on_threshold_uT": 77.03392055451928,
+  "background_p99_signal_uT": 25.677973518173097,
+  "background_max_signal_uT": 26.659520550827615,
+  "note": "Measured with magnets removed. This setup-specific presence gate is not a 0 cm overlap example.",
+  "source_capture": "background-no-magnet-capture.json",
+  "reused_from": "models/v2/no_magnet_reference.json",
+  "reuse_reason": "Regression retrained; no-magnet detection still uses the original raw 12-axis baseline and thresholds. No fresh calibration capture was made. Recapture if the setup changed."
+}

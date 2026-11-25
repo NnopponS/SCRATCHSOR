@@ -1,0 +1,22 @@
+{
+  "no_magnet_replay_states": {
+    "NO_MAGNET": 47
+  },
+  "recorded_magnet_windows_checked": 1348,
+  "recorded_magnet_windows_blocked": 0,
+  "weakest_recorded_magnet_signal_uT": 296.2448702408195,
+  "absence_off_uT": 51.355947036346194,
+  "presence_on_uT": 77.03392055451928,
+  "current_live_prediction": {
+    "state": "NO_MAGNET",
+    "overlap_cm": null,
+    "half_cm": null,
+    "seq": 39277,
+    "ts": 786962,
+    "window_frames": 10,
+    "acquisition_hz": 50.11037,
+    "magnet_signal_uT": 6.661679517959444,
+    "magnet_on_threshold_uT": 77.03392055451928,
+    "magnet_off_threshold_uT": 51.355947036346194
+  }
+}
